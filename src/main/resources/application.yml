@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: SQLService
+  datasource:
+    url: jdbc:mysql://localhost:3306/activity
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+server:
+  address: 0.0.0.0
+  port: 9094
+  error:
+    include-exception: true
+    include-message: always
