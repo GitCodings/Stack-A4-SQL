@@ -38,15 +38,13 @@ public class SQLDetailController
     private final static String STUDENT_WITH_CLASS_LIST =
         "SELECT id, first_name, last_name, year, gpa," +
         "(SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units)) " +
-        " FROM" +
-        "    (SELECT id, name, units " +
-        "     FROM class " +
-        "        JOIN student_class sc ON class.id = sc.class_id " +
-        "     WHERE sc.student_id = :studentId) AS c) AS classes " +
+        " FROM class c " +
+        "     JOIN student_class sc ON c.id = sc.class_id " +
+        " WHERE sc.student_id = :studentId) AS classes " +
         "FROM student s " +
         "WHERE s.id = :studentId;";
 
-    @GetMapping("/student/detail/{studentId}")
+    @GetMapping("/student/{studentId}")
     public ResponseEntity<StudentDetailResponse> studentSearch(
         @PathVariable("studentId") Long studentId)
     {
@@ -72,6 +70,7 @@ public class SQLDetailController
             StudentClass[] studentClassArray =
                 objectMapper.readValue(jsonArrayString, StudentClass[].class);
 
+            // This just helps convert from an Object Array to a List<>
             classes = Arrays.stream(studentClassArray).collect(Collectors.toList());
 
         } catch (JsonProcessingException e) {

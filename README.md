@@ -43,12 +43,12 @@ CREATE TABLE activity.student_class
 
 MySQL Provides us with a good amount of functions for creating JSON strings. This can be very usefull when mapping data to our Models. 
 
-Lets first take this query for example:
+Let us first take this query for example:
 
 ```sql
 SELECT c.id, c.name, c.units 
 FROM class c
-    JOIN student_class sc ON class.id = sc.class_id 
+    JOIN student_class sc ON c.id = sc.class_id 
 WHERE sc.student_id = :studentId
 ```
 
@@ -61,7 +61,7 @@ Lets first rewrite the previous query using one of these two functions:
 ```sql
 SELECT JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units)
 FROM class c
-    JOIN student_class sc ON class.id = sc.class_id 
+    JOIN student_class sc ON c.id = sc.class_id 
 WHERE sc.student_id = :studentId
 ```
 
@@ -71,7 +71,7 @@ WHERE sc.student_id = :studentId
 {
     "id": 1,
     "name": "Intro to CS",
-    "units": 4,
+    "units": 4
 }
 ```
 
@@ -80,7 +80,7 @@ Now we are getting our data in the form of a JSON, but we still need to iterate 
 ```sql
 SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units))
 FROM class c
-    JOIN student_class sc ON class.id = sc.class_id 
+    JOIN student_class sc ON c.id = sc.class_id 
 WHERE sc.student_id = :studentId
 ```
 
@@ -91,21 +91,21 @@ Now when we run this query we will get a JSON Array String composed of all the r
   {
       "id": 1,
       "name": "Intro to CS",
-      "units": 4,
+      "units": 4
   },
   {
       "id": 2,
       "name": "Data Structure",
-      "units": 6,
+      "units": 6
   }
 ]
 ```
 
-So now we get a single JSON Array String that we can use to map to our data. Normally we had Spring automatically map JSON to Model for us, but we can do it mannually when dealing with JSON Directly by using the `ObjectMapper` class. 
+So now we get a single JSON Array String that we can use to map to our data. Normally we had Spring automatically map JSON to Model for us, but we can do it manually when dealing with JSON Directly by using the `ObjectMapper` class. 
 
 ## ObjectMapper
 
-We get out ObjectMapper by asking spring for it in our `@Autowired` constructor like so:
+We get our ObjectMapper by asking spring for it in our `@Autowired` constructor like so:
 
 ```java
 @RestController
@@ -139,9 +139,9 @@ StudentClass[] studentClassArray =
 
 ## Subqueries
 
-There are cases where we will want to retrieve a large collection of data from our database that may seem to required multiple queries. However we can utalize subqueries to be able to do this in a single query (given that the query is not too costly)
+There are cases where we will want to retrieve a large collection of data from our database that may seem to required multiple queries. However, we can utilize subqueries to be able to do this in a single query (given that the query is not too costly)
 
-Lets say we wanted to get a student's details *as well* as a list of their classes. This would normally required two queries:
+Lets say we wanted to get a student's details *as well* as a list of their classes. This would normally require two queries:
 
 ```sql
 SELECT id, first_name, last_name, year, gpa
@@ -150,7 +150,7 @@ WHERE s.id = :studentId;
 
 SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units))
 FROM class c
-    JOIN student_class sc ON class.id = sc.class_id 
+    JOIN student_class sc ON c.id = sc.class_id 
 WHERE sc.student_id = :studentId
 ```
 
@@ -159,16 +159,14 @@ But if we were to rewrite the function with a subquery we could do this in one a
 ```sql
 SELECT id, first_name, last_name, year, gpa,
 (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units))
- FROM
-    (SELECT id, name, units
-     FROM class
-        JOIN student_class sc ON class.id = sc.class_id
-     WHERE sc.student_id = :studentId) AS c) AS classes. -- Notice that we name this column as classes
+ FROM class c 
+     JOIN student_class sc ON c.id = sc.class_id
+ WHERE sc.student_id = :studentId) AS classes  -- Notice that we name this column as classes
 FROM student s
 WHERE s.id = :studentId;
 ```
 
-This query would retrieve 6 colums: 
+This query would retrieve 6 columns: 
   - `id` - Integer
   - `first_name` - String
   - `last_name` - String

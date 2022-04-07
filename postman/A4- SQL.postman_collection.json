@@ -1,0 +1,96 @@
+{
+	"info": {
+		"_postman_id": "7d01d5b1-3351-492a-a22c-db9d9144e94a",
+		"name": "A4: SQL",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Student by ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9094/student/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9094",
+					"path": [
+						"student",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Student Search",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:9094/student/search",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9094",
+					"path": [
+						"student",
+						"search"
+					],
+					"query": [
+						{
+							"key": "firstName",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "lastName",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "year",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "gpa",
+							"value": null,
+							"disabled": true
+						},
+						{
+							"key": "className",
+							"value": "",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

@@ -32,7 +32,7 @@ public class SQLSearchController
 
     //language=sql
     private final static String STUDENT_WITH_CLASS =
-        "SELECT id, first_name, last_name, year, gpa " +
+        "SELECT DISTINCT s.id, first_name, last_name, year, gpa " +
         "FROM student s " +
         "    JOIN student_class sc ON s.id = sc.student_id " +
         "    JOIN class c ON sc.class_id = c.id ";
@@ -47,7 +47,11 @@ public class SQLSearchController
         if (request.getClassName() != null) {
             sql = new StringBuilder(STUDENT_WITH_CLASS);
             sql.append(" WHERE c.name LIKE :className ");
-            source.addValue(":className", request.getClassName(), Types.VARCHAR);
+
+            // This allows for WILDCARD Search
+            String wildcardSearch = '%' + request.getClassName() + '%';
+
+            source.addValue("className", wildcardSearch, Types.VARCHAR);
             whereAdded = true;
         } else {
             sql = new StringBuilder(STUDENT_NO_CLASS);
@@ -61,7 +65,7 @@ public class SQLSearchController
                 whereAdded = true;
             }
 
-            sql.append(" c.first_name LIKE :firstName ");
+            sql.append(" s.first_name LIKE :firstName ");
             source.addValue("firstName", request.getFirstName(), Types.VARCHAR);
         }
 
@@ -73,7 +77,7 @@ public class SQLSearchController
                 whereAdded = true;
             }
 
-            sql.append(" c.last_name LIKE :lastName ");
+            sql.append(" s.last_name LIKE :lastName ");
             source.addValue("lastName", request.getLastName(), Types.VARCHAR);
         }
 
@@ -85,7 +89,7 @@ public class SQLSearchController
                 whereAdded = true;
             }
 
-            sql.append(" c.year = :year ");
+            sql.append(" s.year = :year ");
             source.addValue("year", request.getYear(), Types.VARCHAR);
         }
 
@@ -97,7 +101,7 @@ public class SQLSearchController
                 whereAdded = true;
             }
 
-            sql.append(" c.gpa > :gpa ");
+            sql.append(" s.gpa > :gpa ");
             source.addValue("gpa", request.getGpa(), Types.VARCHAR);
         }
 
