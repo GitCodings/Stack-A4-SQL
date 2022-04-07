@@ -2,6 +2,7 @@
 
 - [Scehma](#schema)
 - [JSON](#json)
+- [ObjectMapper](#objectmapper)
 - [Subqueries](#subqueries)
 - [Dynamic Queries](#dynamic-queries)
 
@@ -100,7 +101,25 @@ Now when we run this query we will get a JSON Array String composed of all the r
 ]
 ```
 
-So now we get a single JSON Array String that we can use to map to our data. Normally we had Spring automatically map JSON to Model for us, but we can do it mannually when dealing with JSON Directly by using the `ObjectMapper` class. (We get this by asking spring for it in our `@Autowired` constructor)
+So now we get a single JSON Array String that we can use to map to our data. Normally we had Spring automatically map JSON to Model for us, but we can do it mannually when dealing with JSON Directly by using the `ObjectMapper` class. 
+
+## ObjectMapper
+
+We get out ObjectMapper by asking spring for it in our `@Autowired` constructor like so:
+
+```java
+@RestController
+public class SQLController
+{
+    private final ObjectMapper objectMapper;
+    
+    @Autowired
+    public SQLController(ObjectMapper objectMapper)
+    {
+        this.objectMapper = objectMapper;
+    }
+}
+```
 
 ObjectMapper has a function: `ObjectMapper::readValue(String jsonString, Class<?> modelClass)` \
 This function takes two arguments:
