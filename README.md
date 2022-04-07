@@ -96,8 +96,7 @@ Now when we run this query we will get a JSON Array String composed of all the r
       "id": 2,
       "name": "Data Structure",
       "units": 6,
-  },
-  ....
+  }
 ]
 ```
 
@@ -159,4 +158,5 @@ This query would retrieve 6 colums:
   - `classes` - String (A JSON Array String we can map)
 
 ## Dynamic Queries
+
 
