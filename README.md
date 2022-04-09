@@ -4,6 +4,7 @@
 - [JSON](#json)
 - [ObjectMapper](#objectmapper)
 - [Subqueries](#subqueries)
+- [Wildcard String Matching](#wildcard-string-matching)
 - [Dynamic Queries](#dynamic-queries)
 
 ## Schema
@@ -174,6 +175,133 @@ This query would retrieve 6 columns:
   - `gpa` - Double
   - `classes` - String (A JSON Array String we can map)
 
+## Wildcard String Matching
+
+Sometimes when searching our database for strings we want to search by *sub-string* rather than an *exact* match. We do this by using both the `LIKE` operator (rather than the `=` operator) and having the string parameter start and end with the `%` character, like so:
+
+
+```java
+public Student studentByFirstName(String firstName)
+{
+    String SQL = 
+        "SELECT id, first_name, last_name, year, gpa " + 
+        "FROM student s " + 
+        "WHERE first_name LIKE :firstName; ";
+
+    // We add the '%' to the value rather than in the SQL Query
+    String wildcardSearch = '%' + firstName + '%';
+
+    MapSqlParameterSource source = new MapSqlParameterSource()
+        .addValue("firstName", firstName, Types.VARCHAR);
+
+    return this.template.queryForObject(SQL, source, this::mapToStudent);
+}
+```
+
+
 ## Dynamic Queries
 
+For some queries we will not be able to use a 'static' SQL String because the `FROM` and `WHERE` clause will depend on the users request.
+
+Lets say a user wants to search for students depending on their firstName, we would use this query:
+
+```sql
+SELECT id, first_name, last_name, year, gpa
+FROM student s
+WHERE first_name LIKE :firstName;
+```
+
+But then lets say the user wants to search for students depending on their first name **and** the classes they are in, meaning we would now need to `JOIN` the class table to our query like so:
+
+```sql
+SELECT DISTINCT id, first_name, last_name, year, gpa
+FROM student s 
+    JOIN student_class sc ON s.id = sc.student_id
+    JOIN class c ON sc.class_id = c.id
+WHERE c.name LIKE :className AND s.first_name LIKE :lastName;
+```
+
+Because of this we would need to *dynmaicly* create the 'WHERE' and 'FROM' clauses.
+
+Here we prepair two queries:
+
+This one for when the user is not searching by class:
+```sql
+SELECT id, first_name, last_name, year, gpa
+FROM student s
+```
+
+This one for when the user is searching for class:
+```sql
+SELECT DISTINCT id, first_name, last_name, year, gpa
+FROM student s 
+    JOIN student_class sc ON s.id = sc.student_id
+    JOIN class c ON sc.class_id = c.id
+```
+
+Then we would add the where clause depending on the search parameters the user gives us. We do this by using Java's `StringBuilder`:
+
+```java
+public List<Student> search(SearchRequest request)
+{
+    StringBuilder         sql;
+    MapSqlParameterSource source     = new MapSqlParameterSource();
+    boolean               whereAdded = false;
+
+    // Here we create the inital StringBuilder depending on the query that requires it
+    // In this case the need to search by classname requires we have the JOIN class clause
+    if (request.getClassName() != null) {
+        sql = new StringBuilder(STUDENT_WITH_CLASS);
+        sql.append(" WHERE c.name LIKE :className ");
+
+        // This allows for WILDCARD Search
+        String wildcardSearch = '%' + request.getClassName() + '%';
+
+        source.addValue("className", wildcardSearch, Types.VARCHAR);
+        whereAdded = true;
+    } else {
+        sql = new StringBuilder(STUDENT_NO_CLASS);
+    }
+
+    ...
+}
+```
+
+Notice that we also have a boolean `whereAdded`. We have this because we need to know if we need to start the where clause (with a `WHERE`) or if we need to add to the clause (with a `AND`) like so:
+
+```
+public List<Student> search(SearchRequest request)
+{
+    ... // From previous example
+
+     if (request.getFirstName() != null) {
+        if (whereAdded) {
+            sql.append(" AND ");
+        } else {
+            sql.append(" WHERE ");
+            whereAdded = true;
+        }
+
+        sql.append(" s.first_name LIKE :firstName ");
+        source.addValue("firstName", request.getFirstName(), Types.VARCHAR);
+    }
+
+    ... // We repeat as neccessary for each value that we need to search by
+
+    // We then 'build' the sql using StringBuilder::toString()
+    List<Student> students = this.template.query(
+            sql.toString(),
+            source,
+            (rs, rowNum) ->
+                new Student()
+                    .setId(rs.getLong("id"))
+                    .setFirstName(rs.getString("first_name"))
+                    .setLastName(rs.getString("first_name"))
+                    .setYear(rs.getInt("year"))
+                    .setGpa(rs.getDouble("gpa"))
+        );
+
+    return students;
+}
+```
 
