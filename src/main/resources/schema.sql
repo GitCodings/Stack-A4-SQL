@@ -1,20 +1,22 @@
-CREATE TABLE activity.student
+CREATE SCHEMA IF NOT EXISTS activity;
+
+CREATE TABLE IF NOT EXISTS activity.student
 (
-    id         INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    first_name VARCHAR(256) NOT NULL,
-    last_name  VARCHAR(256) NOT NULL,
-    year       INT          NOT NULL,
-    gpa        DECIMAL      NOT NULL
+    id         INT            NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(256)   NOT NULL,
+    last_name  VARCHAR(256)   NOT NULL,
+    year       INT            NOT NULL,
+    gpa        DECIMAL(19, 4) NOT NULL
 );
 
-CREATE TABLE activity.class
+CREATE TABLE IF NOT EXISTS activity.class
 (
     id    INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name  VARCHAR(256) NOT NULL UNIQUE,
     units INT          NOT NULL
 );
 
-CREATE TABLE activity.student_class
+CREATE TABLE IF NOT EXISTS activity.student_class
 (
     student_id INT NOT NULL,
     class_id   INT NOT NULL,

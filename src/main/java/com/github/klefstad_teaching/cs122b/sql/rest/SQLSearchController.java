@@ -95,7 +95,7 @@ public class SQLSearchController
             }
 
             sql.append(" s.year = :year ");
-            source.addValue("year", request.getYear(), Types.VARCHAR);
+            source.addValue("year", request.getYear(), Types.INTEGER);
         }
 
         if (request.getGpa() != null) {
@@ -107,7 +107,7 @@ public class SQLSearchController
             }
 
             sql.append(" s.gpa > :gpa ");
-            source.addValue("gpa", request.getGpa(), Types.VARCHAR);
+            source.addValue("gpa", request.getGpa(), Types.DOUBLE);
         }
 
         // We cannot have variable replacement for the ORDER BY clause
@@ -126,7 +126,7 @@ public class SQLSearchController
                 new Student()
                     .setId(rs.getLong("id"))
                     .setFirstName(rs.getString("first_name"))
-                    .setLastName(rs.getString("first_name"))
+                    .setLastName(rs.getString("last_name"))
                     .setYear(rs.getInt("year"))
                     .setGpa(rs.getDouble("gpa"))
         );
