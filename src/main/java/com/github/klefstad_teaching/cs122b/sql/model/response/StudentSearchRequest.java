@@ -7,6 +7,7 @@ public class StudentSearchRequest
     private Integer year;
     private Double  gpa;
     private String  className;
+    private String  orderBy;
 
     public String getFirstName()
     {
@@ -60,6 +61,17 @@ public class StudentSearchRequest
     public StudentSearchRequest setClassName(String className)
     {
         this.className = className;
+        return this;
+    }
+
+    public String getOrderBy()
+    {
+        return orderBy;
+    }
+
+    public StudentSearchRequest setOrderBy(String orderBy)
+    {
+        this.orderBy = orderBy;
         return this;
     }
 }

@@ -54,16 +54,21 @@
 						},
 						{
 							"key": "year",
-							"value": null,
+							"value": "",
 							"disabled": true
 						},
 						{
 							"key": "gpa",
-							"value": null,
+							"value": "",
 							"disabled": true
 						},
 						{
 							"key": "className",
+							"value": "",
+							"disabled": true
+						},
+						{
+							"key": "orderBy",
 							"value": "",
 							"disabled": true
 						}

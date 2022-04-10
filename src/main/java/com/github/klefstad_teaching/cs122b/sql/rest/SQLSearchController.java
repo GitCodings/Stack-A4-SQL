@@ -1,6 +1,7 @@
 package com.github.klefstad_teaching.cs122b.sql.rest;
 
 import com.github.klefstad_teaching.cs122b.sql.model.data.Student;
+import com.github.klefstad_teaching.cs122b.sql.model.data.StudentOrderBy;
 import com.github.klefstad_teaching.cs122b.sql.model.response.StudentSearchRequest;
 import com.github.klefstad_teaching.cs122b.sql.model.response.StudentSearchResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -104,6 +105,12 @@ public class SQLSearchController
             sql.append(" s.gpa > :gpa ");
             source.addValue("gpa", request.getGpa(), Types.VARCHAR);
         }
+
+        // We cannot have variable replacement for the ORDER BY clause
+        // We fix that by having a ENUM of all the possible ORDER BY clauses
+        // there could be and selecting one.
+        StudentOrderBy orderBy = StudentOrderBy.fromString(request.getOrderBy());
+        sql.append(orderBy.toSql());
 
         List<Student> students = this.template.query(
             sql.toString(),
