@@ -4,6 +4,8 @@ import com.github.klefstad_teaching.cs122b.sql.model.data.Student;
 import com.github.klefstad_teaching.cs122b.sql.model.data.StudentOrderBy;
 import com.github.klefstad_teaching.cs122b.sql.model.response.StudentSearchRequest;
 import com.github.klefstad_teaching.cs122b.sql.model.response.StudentSearchResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import java.util.List;
 @RestController
 public class SQLSearchController
 {
+    private static final Logger LOG = LoggerFactory.getLogger(SQLSearchController.class);
+
     private final NamedParameterJdbcTemplate template;
 
     @Autowired
@@ -111,6 +115,9 @@ public class SQLSearchController
         // there could be and selecting one.
         StudentOrderBy orderBy = StudentOrderBy.fromString(request.getOrderBy());
         sql.append(orderBy.toSql());
+
+        LOG.info(sql.toString());
+        LOG.info(source.toString());
 
         List<Student> students = this.template.query(
             sql.toString(),

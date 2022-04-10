@@ -5,7 +5,7 @@ import java.util.Locale;
 public enum StudentOrderBy
 {
     GPA(" ORDER BY s.gpa "),
-    FIRST_NAME(" ORDER BY s.first_name");
+    FIRST_NAME(" ORDER BY s.first_name ");
 
     private final String sql;
 
