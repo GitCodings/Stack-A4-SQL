@@ -167,6 +167,20 @@ FROM student s
 WHERE s.id = :studentId;
 ```
 
+Sometimes we need to do more with the subquery, such as label as `DISTINCT` and give a `ORDER BY` we can do this by having another subquery:
+
+```sql
+SELECT id, first_name, last_name, year, gpa,
+(SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units))
+ FROM (SELECT DISTINCT c.id, c.name, c.units
+       FROM class c 
+           JOIN student_class sc ON c.id = sc.class_id
+       WHERE sc.student_id = :studentId
+       ORDER BY c.name) as c) AS classes
+FROM student s
+WHERE s.id = :studentId;
+```
+
 This query would retrieve 6 columns: 
   - `id` - Integer
   - `first_name` - String
