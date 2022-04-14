@@ -1,6 +1,6 @@
 # CS122B Activity 4 - SQL
 
-- [Scehma](#schema)
+- [Schema](#schema)
 - [JSON](#json)
 - [ObjectMapper](#objectmapper)
 - [Subqueries](#subqueries)
