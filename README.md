@@ -283,7 +283,7 @@ public List<Student> search(SearchRequest request)
 
 Notice that we also have a boolean `whereAdded`. We have this because we need to know if we need to start the where clause (with a `WHERE`) or if we need to add to the clause (with a `AND`) like so:
 
-```
+```java
 public List<Student> search(SearchRequest request)
 {
     ... // From previous example
