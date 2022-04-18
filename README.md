@@ -60,13 +60,13 @@ This query would require us to iterate over the ResultSet to be able to creat a 
 Lets first rewrite the previous query using one of these two functions:
 
 ```sql
-SELECT JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units)
+SELECT JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units) as jsonString
 FROM class c
     JOIN student_class sc ON c.id = sc.class_id 
 WHERE sc.student_id = :studentId
 ```
 
-`JSON_OBJECT` takes a list of arguments in the form: `key, value, key, value, ...` (As many key value pairs). And it will return a JSON String. So for the previous query it would return rows with a single column:
+`JSON_OBJECT` takes a list of arguments in the form: `key, value, key, value, ...` (As many key value pairs). And it will return a JSON String. So for the previous query it calling `rs.getString("jsonString")` would return this:
 
 ```json
 {
@@ -79,13 +79,13 @@ WHERE sc.student_id = :studentId
 Now we are getting our data in the form of a JSON, but we still need to iterate over all the rows and grab *each* json string. we can remove the need to do that by using the `JSON_ARRAYAGG()` function like this:
 
 ```sql
-SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units))
+SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units)) as jsonArrayString
 FROM class c
     JOIN student_class sc ON c.id = sc.class_id 
 WHERE sc.student_id = :studentId
 ```
 
-Now when we run this query we will get a JSON Array String composed of all the rows as JSON Objects:
+Now when we run this query and do `rs.getString("jsonArrayString")` we will get a JSON Array String composed of all the rows as JSON Objects:
 
 ```json
 [
@@ -149,7 +149,7 @@ SELECT id, first_name, last_name, year, gpa
 FROM student s 
 WHERE s.id = :studentId;
 
-SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units))
+SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units)) AS jsonArrayString
 FROM class c
     JOIN student_class sc ON c.id = sc.class_id 
 WHERE sc.student_id = :studentId
@@ -162,7 +162,7 @@ SELECT id, first_name, last_name, year, gpa,
 (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', c.id, 'name', c.name, 'units', c.units))
  FROM class c 
      JOIN student_class sc ON c.id = sc.class_id
- WHERE sc.student_id = :studentId) AS classes  -- Notice that we name this column as classes
+ WHERE sc.student_id = :studentId) AS jsonArrayString  -- Notice that we name this column as classes
 FROM student s
 WHERE s.id = :studentId;
 ```
@@ -176,7 +176,7 @@ SELECT id, first_name, last_name, year, gpa,
        FROM class c 
            JOIN student_class sc ON c.id = sc.class_id
        WHERE sc.student_id = :studentId
-       ORDER BY c.name) as c) AS classes
+       ORDER BY c.name) as c) AS jsonArrayString
 FROM student s
 WHERE s.id = :studentId;
 ```
