@@ -206,7 +206,7 @@ public Student studentByFirstName(String firstName)
     String wildcardSearch = '%' + firstName + '%';
 
     MapSqlParameterSource source = new MapSqlParameterSource()
-        .addValue("firstName", firstName, Types.VARCHAR);
+        .addValue("firstName", wildcardSearch, Types.VARCHAR);
 
     return this.template.queryForObject(SQL, source, this::mapToStudent);
 }
