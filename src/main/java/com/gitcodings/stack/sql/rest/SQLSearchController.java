@@ -1,9 +1,9 @@
-package com.github.klefstad_teaching.cs122b.sql.rest;
+package com.gitcodings.stack.sql.rest;
 
-import com.github.klefstad_teaching.cs122b.sql.model.data.Student;
-import com.github.klefstad_teaching.cs122b.sql.model.data.StudentOrderBy;
-import com.github.klefstad_teaching.cs122b.sql.model.response.StudentSearchRequest;
-import com.github.klefstad_teaching.cs122b.sql.model.response.StudentSearchResponse;
+import com.gitcodings.stack.sql.model.data.Student;
+import com.gitcodings.stack.sql.model.data.StudentOrderBy;
+import com.gitcodings.stack.sql.model.response.StudentSearchRequest;
+import com.gitcodings.stack.sql.model.response.StudentSearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

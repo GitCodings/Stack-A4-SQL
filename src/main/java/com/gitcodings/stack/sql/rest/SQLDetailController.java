@@ -1,10 +1,10 @@
-package com.github.klefstad_teaching.cs122b.sql.rest;
+package com.gitcodings.stack.sql.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.klefstad_teaching.cs122b.sql.model.data.Student;
-import com.github.klefstad_teaching.cs122b.sql.model.data.StudentClass;
-import com.github.klefstad_teaching.cs122b.sql.model.response.StudentDetailResponse;
+import com.gitcodings.stack.sql.model.data.Student;
+import com.gitcodings.stack.sql.model.data.StudentClass;
+import com.gitcodings.stack.sql.model.response.StudentDetailResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

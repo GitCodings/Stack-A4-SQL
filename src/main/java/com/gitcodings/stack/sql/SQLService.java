@@ -1,4 +1,4 @@
-package com.github.klefstad_teaching.cs122b.sql;
+package com.gitcodings.stack.sql;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

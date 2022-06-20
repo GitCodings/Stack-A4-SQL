@@ -1,4 +1,4 @@
-package com.github.klefstad_teaching.cs122b.sql.model.data;
+package com.gitcodings.stack.sql.model.data;
 
 public class StudentClass
 {

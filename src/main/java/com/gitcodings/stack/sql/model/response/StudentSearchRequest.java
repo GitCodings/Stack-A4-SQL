@@ -1,4 +1,4 @@
-package com.github.klefstad_teaching.cs122b.sql.model.response;
+package com.gitcodings.stack.sql.model.response;
 
 public class StudentSearchRequest
 {

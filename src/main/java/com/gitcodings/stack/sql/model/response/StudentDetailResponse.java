@@ -1,8 +1,8 @@
-package com.github.klefstad_teaching.cs122b.sql.model.response;
+package com.gitcodings.stack.sql.model.response;
 
 
-import com.github.klefstad_teaching.cs122b.sql.model.data.Student;
-import com.github.klefstad_teaching.cs122b.sql.model.data.StudentClass;
+import com.gitcodings.stack.sql.model.data.Student;
+import com.gitcodings.stack.sql.model.data.StudentClass;
 
 import java.util.List;
 

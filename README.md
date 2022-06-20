@@ -1,4 +1,4 @@
-# CS122B Activity 4 - SQL
+# Stack Activity 4 - SQL
 
 - [Schema](#schema)
 - [JSON](#json)
